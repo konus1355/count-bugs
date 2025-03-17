@@ -22,9 +22,9 @@ In this project, we propose a **universal method** for estimating the most proba
 - Publishing findings and making the method more accessible.
 
 ### 📚 References
-For further reading on insect population estimation and monitoring, see:
-Onufrieva, K. S., Onufriev, A. V., Hickman, A. D., & Miller, J. R. (2020). Bounds on Absolute Gypsy Moth (Lymantria dispar dispar) (Lepidoptera: Erebidae) Population Density as Derived from Counts in Single Milk Carton Traps. Insects, 11(10), 673.  
-Onufrieva, K. S., & Onufriev, A. V. (2021). How to Count Bugs: A Method to Estimate the Most Probable Absolute Population Density and Its Statistical Bounds from a Single Trap Catch. Insects, 12(10), 932.
+For further reading on insect population estimation and monitoring, see:  
+Onufrieva, K. S., Onufriev, A. V., Hickman, A. D., & Miller, J. R. (2020). [Bounds on Absolute Gypsy Moth (Lymantria dispar dispar) (Lepidoptera: Erebidae) Population Density as Derived from Counts in Single Milk Carton Traps.](https://www.mdpi.com/2075-4450/11/10/673) Insects, 11(10), 673.  
+Onufrieva, K. S., & Onufriev, A. V. (2021). [How to Count Bugs: A Method to Estimate the Most Probable Absolute Population Density and Its Statistical Bounds from a Single Trap Catch.](https://www.mdpi.com/2075-4450/12/10/932) Insects, 12(10), 932.
 
 
 
