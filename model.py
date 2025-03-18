@@ -36,7 +36,7 @@ if uploaded_file is not None:
                 rmse = np.sqrt(mean_squared_error(observed, predictions))
                 r_value, _ = pearsonr(observed, predictions)
 
-                st.subheader('🌟 **Estimated Parameters**')
+                st.subheader('🌟 **Estimated Model Parameters and Fit**')
                 st.write(f" :white_check_mark: **D₅₀: {D50_fit:.2f} m**")
                 st.write(f"**RMSE:** {rmse:.5f}")
                 st.write(f"**Correlation (R):** {r_value:.4f}")
@@ -76,7 +76,7 @@ if uploaded_file is not None:
                 rmse = np.sqrt(mean_squared_error(observed, predictions))
                 r_value, _ = pearsonr(observed, predictions)
 
-                st.subheader('🌟 **Estimated Parameters**')
+                st.subheader('🌟 **Estimated Model Parameters and Fit**')
                 st.write(f"✅**spTfer(0): {spTfer0_fit:.3f}**")
                 st.write(f"✅**D₅₀: {D50_final:.2f} m**")
                 st.write(f"**RMSE:** {rmse:.5f}")
