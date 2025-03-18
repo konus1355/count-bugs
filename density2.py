@@ -53,7 +53,7 @@ st.pyplot(fig)
 # Optionally display the dataframe clearly
 result_df = pd.DataFrame({
     'Catch (M)': chi2_df['M'],
-    'Lower Bound': lower_bound,
+    'Lower Bound': lower_bounds,
     'Most Probable': most_probable,
     'Upper Bound': upper_bounds
 })
