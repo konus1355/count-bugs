@@ -35,9 +35,9 @@ mu = 1 / (np.pi * (D50 ** 2) * np.log(1 + (Rmax ** 2 / D50 ** 2))) * (1 / spTfer
 
 # Correct density calculation for catches M=0 to 30
 Ms = chi2_df['M'].values
-lower_bounds = (mu / 2) * chi2_df['Chi2_lower'] * 1000
-upper_bounds = (mu / 2) * chi2_df['Chi2_upper'] * 1000
-most_probable = mu * Ms * 1000
+lower_bound = (mu / 2) * chi2_lower[M] * 1000
+upper_bound = (mu / 2) * chi2_upper[M] * 1000
+most_probable = mu * M * 1000
 
 # Plot clearly showing the density vs. integer catches
 fig, ax = plt.subplots(figsize=(10, 6))
