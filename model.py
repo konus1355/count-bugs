@@ -37,7 +37,7 @@ if uploaded_file is not None:
                 r_value, _ = pearsonr(observed, predictions)
 
                 st.subheader('🌟 **Estimated D₅₀**')
-                st.write(f" :white_check_mark: **D₅₀:** {D50_fit:.2f} m")
+                st.write(f" :white_check_mark: **D₅₀: {D50_fit:.2f} m**")
                 st.write(f"**RMSE:** {rmse:.5f}")
                 st.write(f"**Correlation (R):** {r_value:.4f}")
 
