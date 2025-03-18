@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-st.title('🦋 Interactive Absolute Density vs. Trap Catch')
+st.title('🦋 Absolute Density vs. Trap Catch')
 
 st.sidebar.header("📌 Adjustable Parameters")
 
@@ -61,5 +61,5 @@ result_df = pd.DataFrame({
     'Upper Bound': upper_bounds
 })
 
-st.write("### 🌟 Final Density Estimates")
+st.write("### 🌟 Absolute Density Estimates")
 st.dataframe(result_df)
