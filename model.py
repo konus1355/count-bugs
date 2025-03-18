@@ -38,7 +38,7 @@ if uploaded_file is not None:
 
                 st.subheader('🌟 **Estimated D₅₀**')
                 st.markdown(f'<p style="color:green; font-size:20px;"><b>D₅₀:</b> {D50_fit:.2f} m</p>', unsafe_allow_html=True)
-                st.write(f" white_check_mark **D₅₀:** {D50_fit:.2f} m")
+                st.write(f" :white_check_mark: **D₅₀:** {D50_fit:.2f} m")
                 st.write(f"**RMSE:** {rmse:.5f}")
                 st.write(f"**Correlation (R):** {r_value:.4f}")
 
