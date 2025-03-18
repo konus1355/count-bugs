@@ -88,7 +88,7 @@ if uploaded_file is not None:
                 fig, ax = plt.subplots()
                 ax.scatter(r, observed, color='blue', label='Observed')
                 ax.plot(r_fit, spTfer_fit, color='green', label='Fitted model (final)')
-                ax.set_xlabel('Distance (r), m))
+                ax.set_xlabel('Distance (r), m)
                 ax.set_ylabel('Capture Probability (spTfer)')
                 ax.legend()
                 st.pyplot(fig)
