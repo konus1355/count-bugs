@@ -31,25 +31,13 @@ chi2_data = {
 chi2_df = pd.DataFrame(chi2_data)
 
 # Correct calculation of μ
-mu = (1 / (np.pi * (D50 ** 2) * np.log(1 + (Rmax ** 2 / D50 ** 2))) * (1 / spTfer0))
+mu = 1 / (np.pi * (D50 ** 2) * np.log(1 + (Rmax ** 2 / D50 ** 2))) * (1 / spTfer0)
 
-# Compute densities correctly
+# Compute densities correctly with multiplication by 10000
 Ms = chi2_df['M'].values
 lower_bounds = [(mu / 2) * chi2_df.loc[chi2_df['M'] == M, 'Chi2_lower'].values[0] * 10000 for M in Ms]
 upper_bounds = [(mu / 2) * chi2_df.loc[chi2_df['M'] == M, 'Chi2_upper'].values[0] * 10000 for M in Ms]
 most_probable = [mu * M * 10000 for M in Ms]
-
-# Debugging Table for verification
-st.write("### 🛠 Debugging Table: Density Calculation Check")
-debug_df = pd.DataFrame({
-    'Catch (M)': Ms,
-    'Chi2 Lower': chi2_df['Chi2_lower'],
-    'Chi2 Upper': chi2_df['Chi2_upper'],
-    'Lower Bound': lower_bounds,
-    'Most Probable': most_probable,
-    'Upper Bound': upper_bounds
-})
-st.dataframe(debug_df)
 
 
 
