@@ -35,9 +35,9 @@ mu = (1 / (np.pi * (D50 ** 2) * np.log(1 + (Rmax ** 2 / D50 ** 2))) * (1 / spTfe
 
 # Compute densities correctly
 Ms = chi2_df['M'].values
-lower_bounds = [(mu / 2) * chi2_df.loc[chi2_df['M'] == M, 'Chi2_lower'].values[0] * 1000 for M in Ms]
-upper_bounds = [(mu / 2) * chi2_df.loc[chi2_df['M'] == M, 'Chi2_upper'].values[0] * 1000 for M in Ms]
-most_probable = [mu * M * 1000 for M in Ms]
+lower_bounds = [(mu / 2) * chi2_df.loc[chi2_df['M'] == M, 'Chi2_lower'].values[0] * 10000 for M in Ms]
+upper_bounds = [(mu / 2) * chi2_df.loc[chi2_df['M'] == M, 'Chi2_upper'].values[0] * 10000 for M in Ms]
+most_probable = [mu * M * 10000 for M in Ms]
 
 # Debugging Table for verification
 st.write("### 🛠 Debugging Table: Density Calculation Check")
