@@ -37,6 +37,7 @@ if uploaded_file is not None:
                 r_value, _ = pearsonr(observed, predictions)
 
                 st.subheader('🌟 **Estimated D₅₀**')
+                st.markdown(f'<p style="color:green; font-size:20px;"><b>D₅₀:</b> {D50_fit:.2f} m</p>', unsafe_allow_html=True)
                 st.write(f"**D₅₀:** {D50_fit:.2f} m")
                 st.write(f"**RMSE:** {rmse:.5f}")
                 st.write(f"**Correlation (R):** {r_value:.4f}")
@@ -48,7 +49,7 @@ if uploaded_file is not None:
                 ax.scatter(r, observed, color='blue', label='Observed')
                 ax.plot(r_fit, spTfer_fit, color='red', label='Fitted model')
                 ax.set_xlabel('Distance r (m)')
-                ax.set_ylabel('Capture Probability (spTfer)')
+                ax.set_ylabel('Capture Probability (spTfer(r))')
                 ax.legend()
                 st.pyplot(fig)
 
