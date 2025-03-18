@@ -1,13 +1,18 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 
-st.title('🦋 Absolute Density Estimator (All Data Points)')
+st.title('🦋 Interactive Absolute Density vs. Trap Catch')
 
-uploaded_file = st.file_uploader("Upload CSV (columns: 'r', 'spTfer(r)')", type=['csv'])
+st.sidebar.header("📌 Adjustable Parameters")
 
+# User inputs
+spTfer0 = st.sidebar.number_input('spTfer(0)', min_value=0.0001, max_value=1.0, value=0.37, step=0.01)
+D50 = st.sidebar.number_input('D₅₀ (m)', min_value=0.1, value=26.0, step=0.1)
+Rmax = st.sidebar.number_input('Rₘₐₓ (m)', min_value=1, value=1600, step=10)
+
+# Chi-square quantile table
 chi2_data = {
     'M': np.arange(0, 31),
     'Chi2_lower': [0, 0.0506356, 0.484419, 1.23734, 2.17973, 3.24697, 4.40379,
@@ -19,63 +24,39 @@ chi2_data = {
                    26.1189, 28.8454, 31.5264, 34.1696, 36.7807, 39.3641,
                    41.9232, 44.4608, 46.9792, 49.4804, 51.966, 54.4373,
                    56.8955, 59.3417, 61.7768, 64.2015, 66.6165, 69.0226,
-                   71.4202, 73.8099, 76.192, 78.5672, 80.9356, 83.2977,
-                   85.6537]
+                   71.4202, 73.8099, 76.192, 78.5672, 80.9356, 83.2977, 85.6537]
 }
 
 chi2_df = pd.DataFrame(chi2_data)
 
-if uploaded_file is not None:
-    data = pd.read_csv(uploaded_file)
+# Calculate μ based on provided parameters
+mu = 1 / (np.pi * (D50 ** 2) * np.log(1 + (1600 ** 2 / D50**2))) * (1 / spTfer0)
 
-    if 'r' not in data.columns or 'spTfer(r)' not in data.columns:
-        st.error("🚨 CSV must have columns 'r' and 'spTfer(r)'.")
-    else:
-        r = data['r'].values
-        spTfer_r = data['spTfer(r)'].values
+# Calculate densities for catches (M) from 0 to 30
+Ms = chi2_df['M'].values
+lower_bounds = (mu / 2) * chi2_df['Chi2_lower'] * 1000
+upper_bounds = (mu / 2) * chi2_df['Chi2_upper'] * 1000
+most_probable = mu * chi2_df['M'] * 1000
 
-        if 0 in r:
-            spTfer0 = spTfer_r[r == 0][0]
-        else:
-            st.error("🚨 Data must contain r=0 to determine spTfer(0).")
-            st.stop()
+# Plot results
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.plot(chi2_df['M'], most_probable, 'o-', color='blue', label='Most probable density')
+ax.fill_between(chi2_df['M'], lower_bounds, upper_bounds, color='gray', alpha=0.3, label='95% Confidence Interval')
 
-        def model(r, D50):
-            return spTfer0 / (1 + (r / D50)**2)
+ax.set_xlabel('Trap Catch (M)')
+ax.set_ylabel('Density (insects/ha)')
+ax.set_title('Estimated Absolute Density vs. Trap Catch')
+ax.grid(True)
+ax.legend()
+st.pyplot(fig)
 
-        popt, _ = curve_fit(model, r, spTfer_r, p0=[np.median(r[r > 0])], bounds=(0.01, np.inf))
-        D50_fit = popt[0]
+# Optionally display the dataframe clearly
+result_df = pd.DataFrame({
+    'Catch (M)': chi2_df['M'],
+    'Lower Bound': lower_bound,
+    'Most Probable': most_probable,
+    'Upper Bound': upper_bounds
+})
 
-        Rmax = st.sidebar.number_input('Rₘₐₓ (m)', min_value=1, value=1600, step=10)
-        mu = 1 / (np.pi * D50_fit**2 * np.log(1 + (Rmax**2 / D50_fit**2))) * (1 / spTfer0)
-
-        densities = []
-        for catch in spTfer_r:
-            M = int(np.round(catch * 1000))  # Example conversion for demonstration
-            if M in chi2_df['M'].values:
-                chi2_lower = chi2_df.loc[chi2_df['M'] == M, 'Chi2_lower'].iloc[0]
-                chi2_upper = chi2_df.loc[chi2_df['M'] == M, 'Chi2_upper'].iloc[0]
-
-                lower = (mu / 2) * chi2_lower * 1000
-                upper = (mu / 2) * chi2_upper * 1000
-                most_probable = mu * M * 1000
-
-                densities.append((lower, most_probable, upper))
-            else:
-                densities.append((np.nan, np.nan, np.nan))
-
-        density_df = pd.DataFrame(densities, columns=['Lower Bound', 'Most Probable', 'Upper Bound'])
-        result_df = pd.concat([data, density_df], axis=1)
-
-        st.write("### 🌟 Density Estimation Results")
-        st.dataframe(result_df)
-
-        plt.figure(figsize=(10, 6))
-        plt.plot(r, density_df['Most Probable'], 'o-', label='Most Probable', color='blue')
-        plt.fill_between(r, density_df['Lower Bound'], density_df['Upper Bound'], color='blue', alpha=0.2, label='95% CI')
-        plt.xlabel('Distance r (m)')
-        plt.ylabel('Density (insects/ha)')
-        plt.legend()
-        plt.grid(True)
-        st.pyplot(plt)
-
+st.write("### 🌟 Detailed Density Estimates")
+st.dataframe(result_df)
