@@ -24,24 +24,25 @@ chi2_data = {
                    26.1189, 28.8454, 31.5264, 34.1696, 36.7807, 39.3641,
                    41.9232, 44.4608, 46.9792, 49.4804, 51.966, 54.4373,
                    56.8955, 59.3417, 61.7768, 64.2015, 66.6165, 69.0226,
-                   71.4202, 73.8099, 76.192, 78.5672, 80.9356, 83.2977, 85.6537]
+                   71.4202, 73.8099, 76.192, 78.5672, 80.9356, 83.2977,
+                   85.6537]
 }
 
 chi2_df = pd.DataFrame(chi2_data)
 
-# Calculate μ based on provided parameters
-mu = 1 / (np.pi * (D50 ** 2) * np.log(1 + (1600 ** 2 / D50**2))) * (1 / spTfer0)
+# Correct calculation of μ
+mu = 1 / (np.pi * (D50 ** 2) * np.log(1 + (Rmax ** 2 / D50 ** 2))) * (1 / spTfer0)
 
-# Calculate densities for catches (M) from 0 to 30
+# Correct density calculation for catches M=0 to 30
 Ms = chi2_df['M'].values
 lower_bounds = (mu / 2) * chi2_df['Chi2_lower'] * 1000
 upper_bounds = (mu / 2) * chi2_df['Chi2_upper'] * 1000
-most_probable = mu * chi2_df['M'] * 1000
+most_probable = mu * Ms * 1000
 
-# Plot results
+# Plot clearly showing the density vs. integer catches
 fig, ax = plt.subplots(figsize=(10, 6))
-ax.plot(chi2_df['M'], most_probable, 'o-', color='blue', label='Most probable density')
-ax.fill_between(chi2_df['M'], lower_bounds, upper_bounds, color='gray', alpha=0.3, label='95% Confidence Interval')
+ax.plot(Ms, most_probable, 'o-', color='blue', label='Most probable density')
+ax.fill_between(Ms, lower_bounds, upper_bounds, color='gray', alpha=0.3, label='95% Confidence Interval')
 
 ax.set_xlabel('Trap Catch (M)')
 ax.set_ylabel('Density (insects/ha)')
@@ -50,9 +51,9 @@ ax.grid(True)
 ax.legend()
 st.pyplot(fig)
 
-# Optionally display the dataframe clearly
+# Detailed density estimates clearly shown
 result_df = pd.DataFrame({
-    'Catch (M)': chi2_df['M'],
+    'Catch (M)': Ms,
     'Lower Bound': lower_bounds,
     'Most Probable': most_probable,
     'Upper Bound': upper_bounds
