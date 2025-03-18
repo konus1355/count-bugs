@@ -3,9 +3,10 @@ import pandas as pd
 import numpy as np
 from scipy.optimize import curve_fit
 from sklearn.metrics import mean_squared_error
+from scipy.stats import pearsonr
 import matplotlib.pyplot as plt
 
-st.title('🦋 Estimate D₅₀ from Trap Data with RMSE')
+st.title('🦋 Estimate D₅₀ from Trap Data with RMSE and R')
 
 uploaded_file = st.file_uploader("Upload CSV (columns: 'r', 'spTfer(r)')", type=['csv'])
 
@@ -33,10 +34,12 @@ if uploaded_file is not None:
                 D50_fit = popt[0]
                 predictions = np.exp(linear_model(r, D50_fit))
                 rmse = np.sqrt(mean_squared_error(observed, predictions))
+                r_value, _ = pearsonr(observed, predictions)
 
                 st.subheader('🌟 **Estimated D₅₀**')
                 st.write(f"**D₅₀:** {D50_fit:.2f} m")
                 st.write(f"**RMSE:** {rmse:.5f}")
+                st.write(f"**Correlation (R):** {r_value:.4f}")
 
                 r_fit = np.linspace(0, r.max(), 200)
                 spTfer_fit = np.exp(linear_model(r_fit, D50_fit))
@@ -71,11 +74,13 @@ if uploaded_file is not None:
                 D50_final = popt_linear[0]
                 predictions = np.exp(linear_model(r, D50_final))
                 rmse = np.sqrt(mean_squared_error(observed, predictions))
+                r_value, _ = pearsonr(observed, predictions)
 
                 st.subheader('🌟 **Estimated Parameters**')
                 st.write(f"**spTfer(0):** {spTfer0_fit:.3f}")
-                st.write(f"**Final D₅₀:** {D50_final:.2f} m")
+                st.write(f"**D₅₀:** {D50_final:.2f} m")
                 st.write(f"**RMSE:** {rmse:.5f}")
+                st.write(f"**Correlation (R):** {r_value:.4f}")
 
                 r_fit = np.linspace(0, r.max(), 200)
                 spTfer_fit = np.exp(linear_model(r_fit, D50_final))
