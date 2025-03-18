@@ -35,11 +35,11 @@ mu = 1 / (np.pi * (D50 ** 2) * np.log(1 + (Rmax ** 2 / D50 ** 2))) * (1 / spTfer
 
 # Compute densities correctly
 Ms = chi2_df['M'].values
-lower_bounds = [(mu / 2) * chi2_df.loc[chi2_df['M'] == M, 'Chi2_lower'].values[0] * 1000 if M > 0 else 0 for M in Ms]
-upper_bounds = [(mu / 2) * chi2_df.loc[chi2_df['M'] == M, 'Chi2_upper'].values[0] * 1000 if M > 0 else 0 for M in Ms]
+lower_bounds = [(mu / 2) * chi2_df.loc[chi2_df['M'] == M, 'Chi2_lower'].values[0] * 1000 for M in Ms]
+upper_bounds = [(mu / 2) * chi2_df.loc[chi2_df['M'] == M, 'Chi2_upper'].values[0] * 1000 for M in Ms]
 most_probable = [mu * M * 1000 for M in Ms]
 
-# Debugging: Show computed values for manual verification
+# Debugging Table for verification
 st.write("### 🛠 Debugging Table: Density Calculation Check")
 debug_df = pd.DataFrame({
     'Catch (M)': Ms,
@@ -56,7 +56,7 @@ for i in range(len(Ms)):
     if upper_bounds[i] < most_probable[i]:
         upper_bounds[i] = most_probable[i] * 1.5  # Fix if needed
 
-# Plot clearly showing the density vs. integer catches
+# Plot correctly structured densities
 fig, ax = plt.subplots(figsize=(10, 6))
 ax.plot(Ms, most_probable, 'o-', color='blue', label='Most probable density')
 ax.fill_between(Ms, lower_bounds, upper_bounds, color='gray', alpha=0.3, label='95% Confidence Interval')
@@ -68,7 +68,7 @@ ax.grid(True)
 ax.legend()
 st.pyplot(fig)
 
-# Detailed density estimates clearly shown
+# Final density estimates
 result_df = pd.DataFrame({
     'Catch (M)': Ms,
     'Lower Bound': lower_bounds,
