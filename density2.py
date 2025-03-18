@@ -4,11 +4,10 @@ import pandas as pd
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 
-st.title('🦋 Absolute Density Estimator for Multiple Data Points')
+st.title('🦋 Absolute Density Estimator (All Data Points)')
 
 uploaded_file = st.file_uploader("Upload CSV (columns: 'r', 'spTfer(r)')", type=['csv'])
 
-# Chi-square quantile table provided by the user
 chi2_data = {
     'M': np.arange(0, 31),
     'Chi2_lower': [0, 0.0506356, 0.484419, 1.23734, 2.17973, 3.24697, 4.40379,
@@ -20,7 +19,31 @@ chi2_data = {
                    26.1189, 28.8454, 31.5264, 34.1696, 36.7807, 39.3641,
                    41.9232, 44.4608, 46.9792, 49.4804, 51.966, 54.4373,
                    56.8955, 59.3417, 61.7768, 64.2015, 66.6165, 69.0226,
-                   71.4202, 73.8099, 76.192, 78.5672, 80.9356, 83.2977, 85.6537]
+                   71.4202, 73.8099, 76.192, 78.5672, 80.9356, 83.2977,
+                   85.6537]
 }
 
-quantile_df = pd.DataFrame(chi2_upper := chi2_data := pd.DataFrame(chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := chi2_data := c
+chi2_df = pd.DataFrame(chi2_data)
+
+if uploaded_file is not None:
+    data = pd.read_csv(uploaded_file)
+
+    if 'r' not in data.columns or 'spTfer(r)' not in data.columns:
+        st.error("🚨 CSV must have columns 'r' and 'spTfer(r)'.")
+    else:
+        r = data['r'].values
+        spTfer_r = data['spTfer(r)'].values
+
+        if 0 in r:
+            spTfer0 = spTfer_r[r == 0][0]
+        else:
+            st.error("🚨 Data must contain r=0 to determine spTfer(0).")
+            st.stop()
+
+        def model(r, D50):
+            return spTfer0 / (1 + (r / D50)**2)
+
+        popt, _ = curve_fit(model, r, spTfer_r, p0=[np.median(r[r > 0])], bounds=(0.01, np.inf))
+        D50_fit = popt[0]
+
+        Rmax = st.sidebar.number_input('Rₘₐₓ (m)', min_value=1, value=1600,
