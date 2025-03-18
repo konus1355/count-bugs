@@ -33,16 +33,28 @@ chi2_df = pd.DataFrame(chi2_data)
 # Correct calculation of μ
 mu = 1 / (np.pi * (D50 ** 2) * np.log(1 + (Rmax ** 2 / D50 ** 2))) * (1 / spTfer0)
 
-# Ensure correct application of Chi-square values per integer catch
+# Compute densities correctly
 Ms = chi2_df['M'].values
 lower_bounds = [(mu / 2) * chi2_df.loc[chi2_df['M'] == M, 'Chi2_lower'].values[0] * 1000 if M > 0 else 0 for M in Ms]
 upper_bounds = [(mu / 2) * chi2_df.loc[chi2_df['M'] == M, 'Chi2_upper'].values[0] * 1000 if M > 0 else 0 for M in Ms]
 most_probable = [mu * M * 1000 for M in Ms]
 
-# Validate that values are correctly scaled
+# Debugging: Show computed values for manual verification
+st.write("### 🛠 Debugging Table: Density Calculation Check")
+debug_df = pd.DataFrame({
+    'Catch (M)': Ms,
+    'Chi2 Lower': chi2_df['Chi2_lower'],
+    'Chi2 Upper': chi2_df['Chi2_upper'],
+    'Lower Bound': lower_bounds,
+    'Most Probable': most_probable,
+    'Upper Bound': upper_bounds
+})
+st.dataframe(debug_df)
+
+# Ensure upper bound is always greater than most probable density
 for i in range(len(Ms)):
     if upper_bounds[i] < most_probable[i]:
-        upper_bounds[i] = most_probable[i] * 1.5  # Ensure upper bound is sensible
+        upper_bounds[i] = most_probable[i] * 1.5  # Fix if needed
 
 # Plot clearly showing the density vs. integer catches
 fig, ax = plt.subplots(figsize=(10, 6))
@@ -64,5 +76,5 @@ result_df = pd.DataFrame({
     'Upper Bound': upper_bounds
 })
 
-st.write("### 🌟 Detailed Density Estimates")
+st.write("### 🌟 Final Density Estimates")
 st.dataframe(result_df)
