@@ -35,4 +35,4 @@ if uploaded_file is not None:
                 st.subheader('🌟 **Estimated D₅₀**')
                 st.write(f"**D₅₀:** {D50_fit:.2f} m")
 
-                r_fit = np.linspace(0, r.max(),
+               r_fit = np.linspace(0, r.max(), 200)
