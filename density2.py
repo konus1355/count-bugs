@@ -46,4 +46,36 @@ if uploaded_file is not None:
         popt, _ = curve_fit(model, r, spTfer_r, p0=[np.median(r[r > 0])], bounds=(0.01, np.inf))
         D50_fit = popt[0]
 
-        Rmax = st.sidebar.number_input('Rₘₐₓ (m)', min_value=1, value=1600,
+        Rmax = st.sidebar.number_input('Rₘₐₓ (m)', min_value=1, value=1600, step=10)
+        mu = 1 / (np.pi * D50_fit**2 * np.log(1 + (Rmax**2 / D50_fit**2))) * (1 / spTfer0)
+
+        densities = []
+        for catch in spTfer_r:
+            M = int(np.round(catch * 1000))  # Example conversion for demonstration
+            if M in chi2_df['M'].values:
+                chi2_lower = chi2_df.loc[chi2_df['M'] == M, 'Chi2_lower'].iloc[0]
+                chi2_upper = chi2_df.loc[chi2_df['M'] == M, 'Chi2_upper'].iloc[0]
+
+                lower = (mu / 2) * chi2_lower * 1000
+                upper = (mu / 2) * chi2_upper * 1000
+                most_probable = mu * M * 1000
+
+                densities.append((lower, most_probable, upper))
+            else:
+                densities.append((np.nan, np.nan, np.nan))
+
+        density_df = pd.DataFrame(densities, columns=['Lower Bound', 'Most Probable', 'Upper Bound'])
+        result_df = pd.concat([data, density_df], axis=1)
+
+        st.write("### 🌟 Density Estimation Results")
+        st.dataframe(result_df)
+
+        plt.figure(figsize=(10, 6))
+        plt.plot(r, density_df['Most Probable'], 'o-', label='Most Probable', color='blue')
+        plt.fill_between(r, density_df['Lower Bound'], density_df['Upper Bound'], color='blue', alpha=0.2, label='95% CI')
+        plt.xlabel('Distance r (m)')
+        plt.ylabel('Density (insects/ha)')
+        plt.legend()
+        plt.grid(True)
+        st.pyplot(plt)
+
