@@ -6,7 +6,7 @@ from sklearn.metrics import mean_squared_error
 from scipy.stats import pearsonr
 import matplotlib.pyplot as plt
 
-st.title('🦋 Estimate D₅₀ from Trap Data with RMSE and R')
+st.title('🦋 Estimate D₅₀ from Trap Data')
 
 uploaded_file = st.file_uploader("Upload CSV (columns: 'r', 'spTfer(r)')", type=['csv'])
 
