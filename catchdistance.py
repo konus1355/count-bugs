@@ -32,7 +32,7 @@ if uploaded_file is not None:
 
             # Fit the model
             try:
-                popt, pcov = curve_fit(spTfer_model, r, observed, p0=initial_guess)
+                popt, pcov = curve_fit(spTfer_model, r, observed, p0=initial_guess, bounds=(0, np.inf))
                 D50_fit = popt[0]
 
                 st.subheader('🌟 **Estimated D₅₀**')
