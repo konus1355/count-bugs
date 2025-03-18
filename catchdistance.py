@@ -1,24 +1,55 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 
-st.title("Trap Catch as a Function of Distance 🦋")
+# --- Page title ---
+st.title('🦋 Estimate D₅₀ from Your Trap Data')
 
-uploaded_file = st.file_uploader("Upload your CSV data", type=['csv'])
+# --- User uploads CSV ---
+uploaded_file = st.file_uploader("Upload your CSV file with columns 'r' and 'spTfer(r)':", type="csv")
 
-D = st.slider("Trap D50 (meters)", 10, 100, 26)
-spTfer0 = st.slider("Probability at r=0 (spTfer(0))", 0.01, 1.0, 0.37)
-R_max = st.number_input("Max dispersal (Rmax, meters)", value=1600)
+# Define your model function
+def spTfer_model(r, spTfer0, D50):
+    return spTfer0 / (1 + (r / D50)**2)
 
-if uploaded_file:
+if uploaded_file is not None:
     data = pd.read_csv(uploaded_file)
-    r = data['r']  # Assume user has distance column
-    spTfer = spTfer0 / (1 + (r/D)**2)
-    spTfer[r > R_max] = 0
     
-    fig, ax = plt.subplots()
-    ax.scatter(r, spTfer, alpha=0.7)
-    ax.set_xlabel('Distance from trap (m)')
-    ax.set_ylabel('Probability of Capture (spTfer)')
-    st.pyplot(fig)
+    if 'r' not in data.columns or 'spTfer(r)' not in data.columns:
+        st.error("🚨 Your file must contain 'r' and 'spTfer(r)' columns.")
+    else:
+        r = data['r'].values
+        observed = data['spTfer(r)'].values
+
+        # Estimate spTfer0 directly from data at distance closest to 0
+        spTfer0_guess = observed[r.argmin()]
+        
+        # Initial guess for D50
+        initial_guess = [spTfer0_guess, np.median(r)]
+
+        try:
+            # Fit the model
+            popt, pcov = curve_fit(spTfer_model, r, observed, p0=initial_guess, bounds=(0, np.inf))
+            spTfer0_fit, D50_fit = popt
+
+            # Display results
+            st.subheader("🎯 Fitted Parameters")
+            st.write(f"**spTfer(0)**: {spTfer0_fit:.3f}")
+            st.write(f"**D₅₀**: {D50_fit:.2f} m")
+
+            # Plot observed vs fitted
+            r_fit = np.linspace(0, r.max(), 200)
+            spTfer_fit = spTfer_model(r_fit, spTfer0_fit, D50_fit)
+
+            fig, ax = plt.subplots()
+            ax.scatter(r, observed, label='Observed data', color='blue')
+            ax.plot(r_fit, spTfer_fit, label='Fitted model', color='red')
+            ax.set_xlabel('Distance (r), m)')
+            ax.set_ylabel('Capture Probability (spTfer(r))')
+            ax.legend()
+            st.pyplot(fig)
+
+        except RuntimeError:
+            st.error("🚨 Model fitting failed. Check your data quality and ensure it follows expected patterns.")
