@@ -10,11 +10,18 @@ st.title('🦋 Absolute Density vs. Trap Catch')
 with st.sidebar.form(key="input_form"):
     st.markdown("📌 **Adjustable Parameters**")
 
-    spTfer0_input = st.text_input("spT<sub>fer</sub>(0)", placeholder="Enter a value between 0 and 1", label_visibility="visible")
-    D50_input = st.text_input("D₅₀ (m)", placeholder="Enter a positive value")
-    Rmax_input = st.text_input("Rₘₐₓ (m)", placeholder="Enter a positive value")
+    # Custom labels with subscript formatting
+    st.markdown("**spT<sub>fer</sub>(0)**", unsafe_allow_html=True)
+    spTfer0_input = st.text_input(label="", placeholder="Enter a value between 0 and 1")
+
+    st.markdown("**D₅₀ (m)**")
+    D50_input = st.text_input(label="", placeholder="Enter a positive value")
+
+    st.markdown("**Rₘₐₓ (m)**")
+    Rmax_input = st.text_input(label="", placeholder="Enter a positive value")
 
     submit_button = st.form_submit_button(label="Submit")
+
 
 # Run calculations only when user clicks submit
 if submit_button:
