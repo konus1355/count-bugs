@@ -6,25 +6,30 @@ import matplotlib.pyplot as plt
 st.set_page_config(page_title="Trap Catch Density Estimator", page_icon="🦋")
 st.title('🦋 Absolute Density vs. Trap Catch')
 
-# Sidebar form for user input
+# Sidebar form with labels and fields aligned using columns
 with st.sidebar.form(key="input_form"):
     st.markdown("📌 **Adjustable Parameters**")
 
-    # Render subscripted labels above the inputs
-    st.markdown("**spT₍fer₎(0)**")
-    spTfer0_input = st.text_input(
-        label="", placeholder="Enter a value between 0 and 1", key="spTfer0_input"
-    )
+    # spTfer(0)
+    col1, col2 = st.columns([0.6, 1.4])
+    with col1:
+        st.markdown("**spT<sub>fer</sub>(0)**", unsafe_allow_html=True)
+    with col2:
+        spTfer0_input = st.text_input(label="", placeholder="e.g., 0.37", key="spTfer0_input")
 
-    st.markdown("**D₅₀ (m)**")
-    D50_input = st.text_input(
-        label="", placeholder="Enter a positive value", key="D50_input"
-    )
+    # D50
+    col3, col4 = st.columns([0.6, 1.4])
+    with col3:
+        st.markdown("**D<sub>50</sub> (m)**", unsafe_allow_html=True)
+    with col4:
+        D50_input = st.text_input(label="", placeholder="e.g., 26", key="D50_input")
 
-    st.markdown("**Rₘₐₓ (m)**")
-    Rmax_input = st.text_input(
-        label="", placeholder="Enter a positive value", key="Rmax_input"
-    )
+    # Rmax
+    col5, col6 = st.columns([0.6, 1.4])
+    with col5:
+        st.markdown("**R<sub>max</sub> (m)**", unsafe_allow_html=True)
+    with col6:
+        Rmax_input = st.text_input(label="", placeholder="e.g., 1600", key="Rmax_input")
 
     submit_button = st.form_submit_button(label="Submit")
 
