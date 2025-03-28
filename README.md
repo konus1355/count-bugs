@@ -1,7 +1,7 @@
 # 🐞 How to Count Bugs: A Quantitative Approach to Insect Population Estimation  
 
 ## 📌 Overview  
-The importance of **conservation and pest management programs** cannot be overstated as climate change, biodiversity loss, and biological invasions continue to rise. Such programs often rely on **traps** for population detection, monitoring, and evaluating treatment efficacy.  
+The importance of conservation and pest management programs cannot be overstated as climate change, biodiversity loss, and biological invasions continue to rise. Such programs often rely on traps for population detection, monitoring, and evaluating treatment efficacy.  
 
 In this project, we propose a **universal method** for estimating the most probable **absolute population density** from a single trap catch, along with its statistical bounds. This approach aims to bring **rigor and precision** to insect detection and monitoring efforts.  
 
