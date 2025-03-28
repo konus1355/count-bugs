@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-st.set_page_config(page_title="Trap Catch Density Estimator", page_icon="🦋")
+st.set_page_config(page_title="How Many Bugs Are Out There?", page_icon="🦋")
 st.title('🦋 Absolute Density vs. Trap Catch')
 
 # Sidebar form with labels and fields aligned using columns
